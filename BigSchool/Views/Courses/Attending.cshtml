@@ -1,41 +1,48 @@
-﻿@model BigSchool.ViewModels.CourseViewModel
+﻿
+@model BigSchool.ViewModels.CourseViewModel
 @{
-    ViewBag.Title = "Home Page";
-
+    ViewBag.Title = "Attending";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h2>Attending</h2>
 
 <div class="row">
     <ul class="course">
         @foreach (var course in Model.UpcommingCourses)
         {
-        <li>
-            <div class="date">
-                <div class="month">
-                    @course.DateTime.ToString("MM")
+            <li>
+                <div class="date">
+                    <div class="month">
+                        @course.DateTime.ToString("MM")
+                    </div>
+                    <div class="day">
+                        @course.DateTime.ToString("dd")
+                    </div>
                 </div>
-                <div class="day">
-                    @course.DateTime.ToString("dd")
-                </div>
-            </div>
-            <div class="details">
-                <span class="lecturer">
-                    @course.Lecturer.Name
+                <div class="details">
+                    <span class="lecturer">
+                        @course.Lecturer.Name
+                        @if (course.IsCanceled)
+                        {
+                            <span class="label label-warning">Canceled</span>
+                        }
+
+                        @if (Model.ShowAction && !course.IsCanceled)
+                        {
+                            <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Follow</button>
+
+                        }
+                    </span>
+                    <span class="category">
+                        @course.Category.name
+                    </span>
                     @if (Model.ShowAction)
                     {
-                        <button class="btn btn-default btn-sm js-toggle-follow" data-user-id="@course.LecturerId">Follow</button>
-
+                        <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
                     }
-                </span>
-                <span class="category">
-                    @course.Category.name
-                </span>
-                @if (Model.ShowAction)
-                {
-                    <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
-                }
-            </div>
-        </li>
+                </div>
+            </li>
 
         }
 
@@ -55,7 +62,7 @@
                         })
                         .fail(function () {
                             alert("Something failed");
-                        });  
+                        });
                 });
             });
             $(".js-toggle-follow").click(function (e) {
@@ -67,7 +74,7 @@
                     .fail(function () {
                         alert("Somthing Fail");
                     });
-                
+
             });
         </script>
     }
